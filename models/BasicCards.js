@@ -12,6 +12,10 @@ const BasicCardsSchema = new Schema({
         type: String,
         trim: true
     },
+    card: [{
+        type: Schema.Types.ObjectId,
+        ref: "BasicCard"
+    }],
     createdAt: Number
 });
 
