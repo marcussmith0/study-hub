@@ -104,4 +104,53 @@ describe("PATCH /basic-card/:id", () => {
             })
             .end(done);
     });
+
+    it("should not update the title, return 400", (done) => {
+        var id = cards[0]._id.toHexString() + "not";
+        var title = "";
+    
+        request(app)
+            .patch(`/basic-card/${id}`)
+            .send({title})
+            .expect(400)
+            .end(done);
+    });
 });
+
+describe("DELETE /basic-card/:id", () => {
+    
+        it("should delete a group of cards", (done) => {
+            var id = cards[0]._id.toHexString();
+        
+            request(app)
+                .delete(`/basic-card/${id}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body.cards._id).toBe(id);
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+
+                    BasicCards.find({}).then((cards) => {
+                        expect(cards.length).toBe(2);
+                        done();
+                    }).catch(e => done(e));
+                });
+        });
+
+        it("should not delete a group of cards, return 400", (done) => {
+            var id = cards[0]._id.toHexString() + "messitup";
+        
+            request(app)
+                .delete(`/basic-card/${id}`)
+                .expect(400)
+                .end((err, res) => {
+                    if (err) return done(err);
+
+                    BasicCards.find({}).then((cards) => {
+                        expect(cards.length).toBe(3);
+                        done();
+                    }).catch(e => done(e));
+                });
+        });
+    });

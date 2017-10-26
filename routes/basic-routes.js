@@ -8,4 +8,6 @@ module.exports = (app) => {
     app.post("/basic-card", BasicController.createCards);
 
     app.patch("/basic-card/:id", BasicController.patchCards);
+
+    app.delete("/basic-card/:id", BasicController.removeCards);
 }
