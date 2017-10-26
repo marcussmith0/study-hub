@@ -1,14 +1,19 @@
 const expect = require("expect");
 const request = require("supertest");
+const { ObjectID } = require("mongodb");
 
 const {app} = require("./../../server");
 const BasicCards = require("./../../models/BasicCards");
 
+const newIdOne = new ObjectID();
+const newIdTwo = new ObjectID();
+const newIdThree = new ObjectID();
+
 const cards = [
-    {title: "title", description: "the test description"},
-    {title: "title2", description: "the 2nd test description"},
-    {title: "title3", description: "the 3rd test description"}  
-]
+    {_id: newIdOne, title: "title", description: "the test description"},
+    {_id: newIdTwo, title: "title2", description: "the 2nd test description"},
+    {_id: newIdThree, title: "title3", description: "the 3rd test description"}  
+];
 
 beforeEach((done) => {
     BasicCards.remove({}).then(() => {
@@ -58,6 +63,28 @@ describe("GET /basic-card", () => {
             .expect((res) => {
                 expect(res.body.cards.length).toBe(3);
             })
+            .end(done);
+    });
+});
+
+describe("GET /basic-card/:id", () => {
+    it("should return correct card set", (done) => {
+        var id = cards[0]._id;
+        request(app)
+            .get(`/basic-card/${id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.cards.title).toBe("title");
+                expect(res.body.cards.description).toBe("the test description");   
+            })
+            .end(done);
+    });
+
+    it("should return 400", (done) => {
+        var id = cards[0]._id + "45";
+        request(app)
+            .get(`/basic-card/${id}`)
+            .expect(400)
             .end(done);
     });
 });
