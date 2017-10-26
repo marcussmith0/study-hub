@@ -12,7 +12,7 @@ const BasicCardsSchema = new Schema({
         type: String,
         trim: true
     },
-    card: [{
+    cards: [{
         type: Schema.Types.ObjectId,
         ref: "BasicCard"
     }],
