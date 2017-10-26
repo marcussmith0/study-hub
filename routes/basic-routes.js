@@ -10,4 +10,5 @@ module.exports = (app) => {
     app.patch("/basic-card/:id", BasicController.patchCards);
 
     app.delete("/basic-card/:id", BasicController.removeCards);
+
 }
