@@ -11,4 +11,6 @@ module.exports = (app) => {
 
     app.delete("/basic-card/:id", BasicController.removeCards);
 
+    app.post("/basic-card/:id", BasicController.makeCards);
+
 }

@@ -16,4 +16,4 @@ const CardBasicSchema = new Schema({
     }
 });
 
-module.exports =  mongoose("CardBasic", CardBasicSchema);
+module.exports =  mongoose.model("CardBasic", CardBasicSchema);
