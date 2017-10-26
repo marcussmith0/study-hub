@@ -6,4 +6,6 @@ module.exports = (app) => {
     app.get("/basic-card/:id", BasicController.getSingleGroup);
 
     app.post("/basic-card", BasicController.createCards);
+
+    app.patch("/basic-card/:id", BasicController.patchCards);
 }

@@ -69,7 +69,7 @@ describe("GET /basic-card", () => {
 
 describe("GET /basic-card/:id", () => {
     it("should return correct card set", (done) => {
-        var id = cards[0]._id;
+        var id = cards[0]._id.toHexString();
         request(app)
             .get(`/basic-card/${id}`)
             .expect(200)
@@ -81,10 +81,27 @@ describe("GET /basic-card/:id", () => {
     });
 
     it("should return 400", (done) => {
-        var id = cards[0]._id + "45";
+        var id = cards[0]._id.toHexString() + "45";
         request(app)
             .get(`/basic-card/${id}`)
             .expect(400)
+            .end(done);
+    });
+});
+
+describe("PATCH /basic-card/:id", () => {
+
+    it("should update the title", (done) => {
+        var id = cards[0]._id.toHexString();
+        var title = "THIS IS THE NEW TEST TITLE";
+    
+        request(app)
+            .patch(`/basic-card/${id}`)
+            .send({title})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.cards.title).toBe(title);
+            })
             .end(done);
     });
 });

@@ -28,3 +28,15 @@ exports.createCards = (req, res) => {
         res.send({cards});
     }).catch(e => res.status(400).send());
 }
+
+exports.patchCards = (req, res) => {
+    let id = req.params.id;
+    if(!ObjectID.isValid(id)) return res.status(400).send();
+    let body = _.pick(req.body, ["title", "description"]);
+
+    BasicCards.findByIdAndUpdate(id, { $set: body}, { new: true }).then((cards) => {
+        if(!cards) return res.status(404).send();
+        
+        res.send({cards});
+    }).catch(e => res.status(400).send());
+}
