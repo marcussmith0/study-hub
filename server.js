@@ -11,6 +11,8 @@ mongoose.connect(url);
 
 app.use(bodyParser.json());
 
+require("./routes/basic-routes");
+
 app.listen(PORT, () => {
     console.log(`server is listening on ${PORT}`);
 });
