@@ -6,6 +6,7 @@ const app = express();
 const url = process.env.MONGODB_URI || 'mongodb://localhost/StudyHub';
 const PORT = process.env.PORT || 3000;
 
+mongoose.Promise = global.Promise;
 mongoose.connect(url);
 
 app.use(bodyParser.json());
