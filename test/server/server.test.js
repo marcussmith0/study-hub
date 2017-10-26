@@ -154,3 +154,52 @@ describe("DELETE /basic-card/:id", () => {
                 });
         });
     });
+
+describe("POST /basic-card/:id", () => {
+    it('add elements to BasicCards array', (done) => {
+        let body = {
+            cards: [
+                {"front": "front1", "back": "back1"},
+                {"front": "front2", "back": "back2"},
+                {"front": "front3", "back": "back3"}
+            ]
+        }
+
+        let id = cards[0]._id.toHexString();
+
+        request(app)
+            .post(`/basic-card/${id}`)
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.group._id).toBe(id);
+                expect(res.body.group.cards.length).toBe(3);
+            })
+            .end((err, res) => {
+                if(err) return done(err);
+
+                BasicCards.findById(id).then((cards) => {
+                    expect(cards.cards.length).toBe(3);
+                    done();
+                }).catch(e => done(e));
+            });
+    });
+
+    it("should not add element to BasicCards array", (done) => {
+        let body = {
+            cards: [
+                {"front": "front1", "back": "back1"},
+                {"front": "front2", "back": "back2"},
+                {"front": "front3", "back": "back3"}
+            ]
+        }
+
+        let id = cards[0]._id.toHexString() + "djsf";
+
+        request(app)
+            .post(`/basic-card/${id}`)
+            .send(body)
+            .expect(400)
+            .end(done);
+    });
+});
