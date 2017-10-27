@@ -74,3 +74,13 @@ exports.getSingleCard = (req, res) => {
         res.send({card});
     }).catch(e => res.status(400).send());
 }
+
+exports.patchCard = (req, res) => {
+    let id = req.params.id;
+    if(!ObjectID.isValid(id)) return res.status(400).send();
+    let body = _.pick(req.body, ["front", "back"]);
+
+    CardBasic.findByIdAndUpdate(id, {$set: body}, { new: true }).then((card) => {
+        res.send({card});
+    }).catch(e => res.status(400).send());
+}

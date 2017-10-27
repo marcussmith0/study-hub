@@ -14,4 +14,6 @@ module.exports = (app) => {
     app.post("/basic-card/:id", BasicController.makeCards);
 
     app.get("/card-basic/:id", BasicController.getSingleCard);
+
+    app.patch("/card-basic/:id", BasicController.patchCard);
 }
