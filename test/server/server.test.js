@@ -257,3 +257,67 @@ describe("GET /card-basic/:id", () => {
             .end(done);
     }); 
 });
+
+describe("PATCH /card-basic/:id", () => {
+    it("successfully change the text of card", (done) => {
+        let id = singleCards[0]._id.toHexString();
+        let front = "FRONT";
+        let back = "BACK";
+
+        request(app)
+            .patch(`/card-basic/${id}`)
+            .send({front, back})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.card._id).toBe(id);                
+                expect(res.body.card.front).toBe(front);
+                expect(res.body.card.back).toBe(back);
+            })
+            .end((err, res) => {
+                if(err) return done(err);
+
+                CardBasic.findById(id).then((card) => {
+                    expect(card.front).toBe(front);
+                    expect(card.back).toBe(back);
+                    done();
+                }).catch(e => done(e));
+            });
+    });
+
+    it("should not successfully change the text of card", (done) => {
+        let id = singleCards[1]._id.toHexString();
+        let front = "FRONT";
+        let back = "BACK";
+
+        request(app)
+            .patch(`/card-basic/${id}`)
+            .send({front, back})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.card._id).toNotBe(singleCards[0]._id.toHexString());                
+                expect(res.body.card.front).toNotBe(singleCards[0].front);
+                expect(res.body.card.back).toNotBe(singleCards[0].back);
+            })
+            .end((err, res) => {
+                if(err) return done(err);
+
+                CardBasic.findById(id).then((card) => {
+                    expect(card.front).toNotBe(singleCards[0].front);
+                    expect(card.back).toNotBe(singleCards[0].back);
+                    done();
+                }).catch(e => done(e));
+            });
+    });
+
+    it("should return 400 due to invalid id", (done) => {
+        let id = singleCards[1]._id.toHexString() + "dklafj;lkd";
+        let front = "FRONT";
+        let back = "BACK";
+
+        request(app)
+            .patch(`/card-basic/${id}`)
+            .send({front, back})
+            .expect(400)
+            .end(done);
+    });
+});
