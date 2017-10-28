@@ -4,6 +4,8 @@ const { ObjectID } = require("mongodb");
 
 const {app} = require("./../../server");
 const BasicCards = require("./../../models/BasicCards");
+const CardBasic = require("./../../models/CardBasic");
+
 
 const newIdOne = new ObjectID();
 const newIdTwo = new ObjectID();
@@ -15,9 +17,25 @@ const cards = [
     {_id: newIdThree, title: "title3", description: "the 3rd test description"}  
 ];
 
+const cardIdOne = new ObjectID();
+const cardIdTwo = new ObjectID();
+const cardIdThree = new ObjectID();
+
+const singleCards = [
+    {_id: cardIdOne, front: "first front", back: "first back"},
+    {_id: cardIdTwo, front: "second front", back: "second back"},
+    {_id: cardIdThree, front: "third front", back: "third back"}
+]
+
 beforeEach((done) => {
     BasicCards.remove({}).then(() => {
         return BasicCards.insertMany(cards);
+    }).then(() => done());
+});
+
+beforeEach((done) => {
+    CardBasic.remove({}).then(() => {
+        return CardBasic.insertMany(singleCards);
     }).then(() => done());
 });
 
@@ -202,4 +220,40 @@ describe("POST /basic-card/:id", () => {
             .expect(400)
             .end(done);
     });
+});
+
+describe("GET /card-basic/:id", () => {
+    it("return the correct card", (done) => {
+        let id = singleCards[0]._id.toHexString();
+        request(app)
+            .get(`/card-basic/${id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.card._id).toBe(id);
+                expect(res.body.card.front).toBe(singleCards[0].front);
+                expect(res.body.card.back).toBe(singleCards[0].back);                
+            })
+            .end(done);
+    });
+
+    it("return the wrong card", (done) => {
+        let id = singleCards[1]._id.toHexString();
+        request(app)
+            .get(`/card-basic/${id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.card._id).toNotBe(singleCards[0]._id);
+                expect(res.body.card.front).toNotBe(singleCards[0].front);
+                expect(res.body.card.back).toNotBe(singleCards[0].back);                
+            })
+            .end(done);
+    });
+
+    it("return the correct card", (done) => {
+        let id = singleCards[0]._id.toHexString() + "dfsajf;lkdajfl";
+        request(app)
+            .get(`/card-basic/${id}`)
+            .expect(400)
+            .end(done);
+    }); 
 });
