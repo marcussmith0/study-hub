@@ -16,4 +16,6 @@ module.exports = (app) => {
     app.get("/card-basic/:id", BasicController.getSingleCard);
 
     app.patch("/card-basic/:id", BasicController.patchCard);
+
+    app.delete("/card-basic/:id", BasicController.deleteSingle);
 }
