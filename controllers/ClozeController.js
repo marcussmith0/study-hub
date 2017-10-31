@@ -35,6 +35,8 @@ exports.updateGroup = (req, res) => {
     if(!ObjectId.isValid(id)) res.status(400).send();
     let body = _.pick(req.body, ["title", "description"]);
 
+    if(!body.title || !body.description) res.status(400).send();
+
     ClozeCard.findByIdAndUpdate(id, { $set : body }, {new: true}).then((group) => {
         res.send({group});
     }).catch(e => res.status(400).send());

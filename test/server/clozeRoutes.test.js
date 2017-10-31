@@ -93,3 +93,53 @@ describe("GET /cloze-card/:id", () => {
         .end(done);  
     });
 });
+
+describe("PATCH /cloze-card/:id", () => {
+    it("should set the title and description to new value", (done) => {
+        let id = cards[0]._id.toHexString();
+        const title = "TITLE";
+        const description = "DESCRIPTION";
+
+        request(app)
+            .patch(`/cloze-card/${id}`)
+            .send({title, description})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.group.title).toBe(title);
+                expect(res.body.group.description).toBe(description);
+            })
+            .end((err, res) => {
+                if (err) return done(err);
+
+                ClozeCard.findById(id).then(card => {
+                    expect(card.title).toBe(title);
+                    expect(card.description).toBe(description);
+                    done();
+                }).catch(e => done(e));
+            });
+    });
+
+    it("should return 400 error for blank title", (done) => {
+        let id = cards[0]._id.toHexString();
+        const title = "";
+        const description = "DESCRIPTION";
+
+        request(app)
+            .patch(`/cloze-card/${id}`)
+            .send({title, description})
+            .expect(400)
+            .end(done);
+    });
+
+    it("should return 400 for invalid object ID", (done) => {
+        let id = cards[0]._id.toHexString() + "dfja";
+        const title = "TITLE";
+        const description = "DESCRIPTION";
+
+        request(app)
+            .patch(`/cloze-card/${id}`)
+            .send({title, description})
+            .expect(400)
+            .end(done);
+    });
+});
