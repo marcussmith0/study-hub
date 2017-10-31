@@ -6,6 +6,7 @@ const ClozeCardsSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        unique: true,
         minlength: 1
     },
     description: {
