@@ -8,7 +8,13 @@ const ClozeSchema = new Schema({
         trim: true,
         minlength: 1
     },
-    word: {
+    partialText: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1
+    },
+    deletion: {
         type: String,
         trim: true,
         required: true,
