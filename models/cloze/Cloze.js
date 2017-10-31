@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
+const RegexParser = require("regex-parser");
+
 const Schema = mongoose.Schema;
+
 
 const ClozeSchema = new Schema({
     fullText : {
@@ -20,6 +23,13 @@ const ClozeSchema = new Schema({
         required: true,
         minlength: 1
     }
+});
+
+ClozeSchema.pre("save", (next) => {
+    const re = RegexParser(`/\W${this.deletion}\W/`)
+    const partialText = this.fullText.replace(re, "....");
+    this.partialText = partialText;
+    next();
 });
 
 module.exports = mongoose.model("Cloze", ClozeSchema);
