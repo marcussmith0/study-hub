@@ -10,6 +10,7 @@ const { mongoose } = require("./db/mongoose");
 app.use(bodyParser.json());
 
 require("./routes/basic-routes")(app);
+require("./routes/cloze-routes")(app);
 
 app.listen(PORT, () => {
     console.log(`server is listening on ${PORT}`);
