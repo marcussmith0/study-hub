@@ -24,7 +24,8 @@ exports.getSingleGroup = (req, res) => {
 exports.createCards = (req, res) => {
     let body = _.pick(req.body, ["title", "description"]);
     let newCards = new BasicCards(body);
-    
+    newCards.createdAt = new Date().getTime();
+
     newCards.save().then((cards) => {
         res.send({cards});
     }).catch(e => res.status(400).send());
