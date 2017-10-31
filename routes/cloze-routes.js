@@ -9,4 +9,6 @@ module.exports = (app) => {
 
     app.patch("/cloze-card/:id", ClozeController.updateGroup);
 
+    app.delete("/cloze-card/:id", ClozeController.removeGroup);
+
 }
