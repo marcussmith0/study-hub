@@ -29,3 +29,13 @@ exports.getGroup = (req, res) => {
         res.send({group});
     }).catch(e => res.status(400).send());
 }
+
+exports.updateGroup = (req, res) => {
+    let id = req.params.id;
+    if(!ObjectId.isValid(id)) res.status(400).send();
+    let body = _.pick(req.body, ["title", "description"]);
+
+    ClozeCard.findByIdAndUpdate(id, { $set : body }, {new: true}).then((group) => {
+        res.send({group});
+    }).catch(e => res.status(400).send());
+}

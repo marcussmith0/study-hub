@@ -7,4 +7,6 @@ module.exports = (app) => {
 
     app.post("/cloze-card", ClozeController.createClozeCard);
 
+    app.patch("/cloze-card/:id", ClozeController.updateGroup);
+
 }
