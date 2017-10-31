@@ -3,8 +3,8 @@ const request = require("supertest");
 const { ObjectID } = require("mongodb");
 
 const {app} = require("./../../server");
-const BasicCards = require("./../../models/BasicCards");
-const CardBasic = require("./../../models/CardBasic");
+const BasicCards = require("./../../models/basic/BasicCards");
+const CardBasic = require("./../../models/basic/CardBasic");
 
 
 const newIdOne = new ObjectID();

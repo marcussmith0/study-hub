@@ -1,8 +1,8 @@
 const { ObjectID } = require("mongodb");
 const _ = require("lodash");
 
-const BasicCards = require("./../models/BasicCards");
-const CardBasic = require("./../models/CardBasic");
+const BasicCards = require("./../models/basic/BasicCards");
+const CardBasic = require("./../models/basic/CardBasic");
 
 exports.getAllGroups = (req, res) => {
     BasicCards.find({}).then((cards) => {
@@ -24,7 +24,7 @@ exports.getSingleGroup = (req, res) => {
 exports.createCards = (req, res) => {
     let body = _.pick(req.body, ["title", "description"]);
     let newCards = new BasicCards(body);
-
+    
     newCards.save().then((cards) => {
         res.send({cards});
     }).catch(e => res.status(400).send());
