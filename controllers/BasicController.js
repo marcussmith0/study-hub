@@ -49,8 +49,10 @@ exports.removeCards = (req, res) => {
 
     BasicCards.findByIdAndRemove(id).then((cards) => {
         if(!cards) return res.status(404).send();
-
-        res.send({cards});
+        
+        return CardBasic.remove({_id : { $in: cards.cards}});
+    }).then((removed) => {
+        res.send({removed});
     }).catch(e => res.status(400).send());
 };
 
