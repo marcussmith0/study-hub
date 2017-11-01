@@ -9,6 +9,7 @@ const { mongoose } = require("./db/mongoose");
 
 app.use(bodyParser.json());
 
+require("./routes/note-routes")(app);
 require("./routes/basic-routes")(app);
 require("./routes/cloze-routes")(app);
 
