@@ -15,5 +15,6 @@ module.exports = (app) => {
 
     app.delete("/delete/cloze/:id", ClozeController.removeCard);
 
+    //app.patch("/update/cloze/:id", ClozeController.patchCard);
 
 }

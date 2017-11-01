@@ -2,8 +2,8 @@ const _ = require("lodash");
 const mongoose  = require("mongoose");
 const { ObjectId } = require("mongodb");
 
-const ClozeCard = require("./../models/cloze/ClozeCard");
 const Cloze = require("./../models/cloze/Cloze");
+const ClozeCard = require("./../models/cloze/ClozeCard");
 
 
 exports.createClozeCard = (req, res) => {
@@ -37,7 +37,7 @@ exports.updateGroup = (req, res) => {
     if(!ObjectId.isValid(id)) res.status(400).send();
     let body = _.pick(req.body, ["title", "description"]);
 
-    if(!body.title || !body.description) res.status(400).send();
+    if(!body.title || !body.description) return res.status(400).send();
 
     ClozeCard.findByIdAndUpdate(id, { $set : body }, {new: true}).then((group) => {
         res.send({group});
@@ -80,3 +80,18 @@ exports.removeCard = (req, res) => {
         res.send({group});
     }).catch(e => res.status(400).send());
 }
+
+// exports.patchCard = (req, res) => {
+//     let id = req.params.id;
+//     if(!ObjectId.isValid(id)) return res.status(400).send();
+
+//     let body = _.pick(req.body, ["fullText", "deletion"]);
+
+//     if(!body.fullText || !body.deletion) return res.status(400).send();    
+
+//     Cloze.findByIdAndUpdate(id, { $set: body }, { new: true }).then(card => {
+//         if(!card) return res.status(404).send();
+
+//         res.send({card});
+//     }).catch(e => res.status(400).send(e));
+// }
