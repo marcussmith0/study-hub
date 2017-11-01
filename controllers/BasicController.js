@@ -6,6 +6,7 @@ const CardBasic = require("./../models/basic/CardBasic");
 
 exports.getAllGroups = (req, res) => {
     BasicCards.find({}).then((cards) => {
+        
         res.send({cards});
     }).catch(e => res.status(400).send());
 };
@@ -27,6 +28,7 @@ exports.createCards = (req, res) => {
     newCards.createdAt = new Date().getTime();
 
     newCards.save().then((cards) => {
+
         res.send({cards});
     }).catch(e => res.status(400).send());
 };
@@ -52,6 +54,7 @@ exports.removeCards = (req, res) => {
         
         return CardBasic.remove({_id : { $in: cards.cards}});
     }).then((removed) => {
+
         res.send({removed});
     }).catch(e => res.status(400).send());
 };
@@ -62,9 +65,11 @@ exports.makeCards = (req,  res) => {
     
     CardBasic.insertMany(req.body.cards).then((cards) => {
         if(!cards) return res.status(404).send();
+
         return BasicCards.findByIdAndUpdate(id, { $pushAll: { cards }}, { new: true});
     }).then((group) => {
         if(!group) return res.status(404).send();
+
         res.send({group});  
     }).catch(e => res.status(400).send());
 };
@@ -74,7 +79,8 @@ exports.getSingleCard = (req, res) => {
     if(!ObjectID.isValid(id)) return res.status(400).send();
 
     CardBasic.findById(id).then((card) => {
-        if(!card) res.status(404).send();        
+        if(!card) res.status(404).send(); 
+
         res.send({card});
     }).catch(e => res.status(400).send());
 }
@@ -85,6 +91,7 @@ exports.patchCard = (req, res) => {
 
     CardBasic.findByIdAndUpdate(id, {$set: req.body}, { new: true }).then((card) => {
         if(!card) res.status(404).send();
+
         res.send({card});
     }).catch(e => res.status(400).send());
 }
@@ -95,9 +102,11 @@ exports.deleteSingle = (req, res) => {
 
     CardBasic.findByIdAndRemove(id).then((card) => {
         if(!card) return res.status(404).send();
+
         return BasicCards.findOneAndUpdate({cards: {$in: [card._id]}}, { $pull: { cards: card._id }}, {new: true});
     }).then((group) => {
         if(!group) return res.status(404).send();
+
         res.send(group);
     }).catch(e => res.status(400).send(e));
 }

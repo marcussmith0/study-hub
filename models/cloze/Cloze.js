@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-const RegexParser = require("regex-parser");
-
 const Schema = mongoose.Schema;
-
 
 const ClozeSchema = new Schema({
     fullText : {

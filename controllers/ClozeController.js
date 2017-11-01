@@ -66,3 +66,17 @@ exports.createSingleCloze = (req, res) => {
         res.send({group});
     }).catch(e => res.status(400).send(e));
 }
+
+exports.removeCard = (req, res) => {
+    let id = req.params.id;
+    if(!ObjectId.isValid(id)) return res.status(400).send();
+
+    Cloze.findByIdAndRemove(id).then(card => {
+        if(!card) return res.status(404).send();
+
+        return ClozeCard.findOneAndUpdate({cards: { $in: [card._id]}}, { $pull: {cards: card._id }}, { new: true});
+    }).then((group) => {
+        if(!group) return res.status(404).send();
+        res.send({group});
+    }).catch(e => res.status(400).send());
+}
