@@ -13,7 +13,6 @@ const ClozeSchema = new Schema({
     },
     partialText: {
         type: String,
-        required: true,
         trim: true,
         minlength: 1
     },
@@ -25,11 +24,13 @@ const ClozeSchema = new Schema({
     }
 });
 
-ClozeSchema.pre("save", (next) => {
-    const re = RegexParser(`/\W${this.deletion}\W/`)
-    const partialText = this.fullText.replace(re, "....");
-    this.partialText = partialText;
-    next();
+ClozeSchema.pre("save", function(next) {
+    if(this.fullText.split(" ").includes(this.deletion) && this.deletion !== this.fullText) {
+        let deletion = this.deletion;
+        let re = new RegExp("(^|\\W)" + deletion + "($|\\W)");
+        this.partialText = this.fullText.replace(re, " .... ");
+        next();
+    }  else return next();
 });
 
 module.exports = mongoose.model("Cloze", ClozeSchema);

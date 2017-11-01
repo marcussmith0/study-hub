@@ -11,4 +11,6 @@ module.exports = (app) => {
 
     app.delete("/cloze-card/:id", ClozeController.removeGroup);
 
+    app.post("/new/cloze/:id", ClozeController.createSingleCloze);
+
 }

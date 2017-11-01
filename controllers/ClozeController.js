@@ -3,6 +3,8 @@ const mongoose  = require("mongoose");
 const { ObjectId } = require("mongodb");
 
 const ClozeCard = require("./../models/cloze/ClozeCard");
+const Cloze = require("./../models/cloze/Cloze");
+
 
 exports.createClozeCard = (req, res) => {
     let body = _.pick(req.body, ["title", "description"]);
@@ -50,4 +52,17 @@ exports.removeGroup = (req, res) => {
         if(!group) res.status(404).send();
         res.send({group});
     }).catch(e => res.status(400).send());
+}
+
+exports.createSingleCloze = (req, res) => {
+    let id = req.params.id;
+    if(!ObjectId.isValid(id)) return res.status(400).send();
+    let body = _.pick(req.body, ["fullText", "deletion"]);
+    let newCard = new Cloze(body);
+
+    newCard.save().then(card => {
+        return ClozeCard.findByIdAndUpdate(id, { $push: {cards : card}}, { new: true });
+    }).then(group => {
+        res.send({group});
+    }).catch(e => res.status(400).send(e));
 }
